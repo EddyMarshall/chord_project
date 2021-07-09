@@ -2,10 +2,10 @@ class Chords
 
     NOTES = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 
-    attr_reader :key, :notes, :diatonic_chords, :scale, :extended_chords, :secondary_dominants, :running
+    attr_reader :key, :scale, :diatonic_chords, :scale, :extended_chords, :secondary_dominants, :running
 
-    def initialize(key)
-        @key = key
+    def initialize
+        @key = find_key
         @scale = build_scale(key)
         @diatonic_chords = build_chords("pop")
         @extended_chords = build_chords("jazz")
@@ -14,7 +14,7 @@ class Chords
     end
 
     def make_progression
-        p "what genre? (I only accept jazz, pop, and none)"
+        p "what genre? (I only accept jazz, pop, and random)"
         genre = gets.chomp
         if genre == "jazz"
             options = secondary_dominants + extended_chords
@@ -97,27 +97,56 @@ class Chords
 
     def run
         while running == true
-            puts "Here are some commands that work for me"
+            system "clear"
+            puts "Here are some commands that work for me in the key of #{key}"
+            puts "show scale"
             puts "list diatonic chords"
             puts "list extended chords"
             puts "list secondary dominants"
             puts "next chord options"
             puts "find this function"
             puts "make a progression"
+            puts "quit"
+            puts
+            puts
+            puts "what do you want?"
             command = gets.chomp
-            system "clear"
             case command
+            when "show scale"
+                puts "#{scale[0]} #{scale[1]} #{scale[2]} #{scale[3]} #{scale[4]} #{scale[5]} #{scale[6]}"
             when "list diatonic chords"
-                puts here you are
+                puts "here you are"
                 puts diatonic_chords
+            when "list extended chords"
+                puts "here you are"
+                puts extended_chords
+            when "list secondary dominants"
+                puts "here you are"
+                puts secondary_dominants
+            when "next chord options"
+                next_chord_options
+            when "find this function"
+                function_finder
+            when "make a progression"
+                make_progression
+            when "quit"
+                running = false
+                return nil
             end
             puts
             puts
-            puts
+            puts "press any key to move on"
+            moving = gets
         end
     end
 
     private
+
+    def find_key
+        puts "what key are you in?"
+        key = gets.chomp.upcase
+    end
+
     def build_scale(key)
         new_arr = []
         build_from = NOTES.rotate(NOTES.index(key))
@@ -168,7 +197,6 @@ class Chords
 
 end
 
-A = Chords.new("D")
-puts
-puts
+
+A = Chords.new
 A.run
