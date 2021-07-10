@@ -168,7 +168,7 @@ class Chords
                 [build_from[11]]
             new_arr.each_with_index do |note, i|
                 if note.include?("#")
-                    new_arr[i] = NOTES[NOTES.index(note) + 1] + "b"
+                    new_arr[i] = build_from[build_from.index(note) + 1] + "b"
                 end
             end
         end
