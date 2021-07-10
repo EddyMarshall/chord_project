@@ -1,3 +1,5 @@
+
+require "byebug"
 class Chords
 
     NOTES = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
@@ -42,21 +44,21 @@ class Chords
 
         if tonic.include?(current_chord)
             system "clear"
-            puts "these chords will lift the sound up"
+            puts "These chords will lift the sound up"
             puts subdominant
             puts
             puts "and these chords will add some tension"
             puts dominant
         elsif subdominant.include?(current_chord)
             system "clear"
-            puts "these chords will relax the listener"
+            puts "These chords will relax the listener"
             puts tonic
             puts
             puts "and these chords will add some tension"
             puts dominant
         elsif secondary_dominants.include?(current_chord)
             system "clear"
-            puts "you saucy minx, here is where that chord WANTS to go, but not where it needs to go."
+            puts "You saucy minx, here is where that chord WANTS to go, but not where it needs to go."
             i = secondary_dominants.index(current_chord)
             if i == 0
                 puts "#{diatonic_chords[3]} and #{extended_chords[3]}"
@@ -103,6 +105,7 @@ class Chords
             puts "list diatonic chords"
             puts "list extended chords"
             puts "list secondary dominants"
+            puts "show all"
             puts "next chord options"
             puts "find this function"
             puts "make a progression"
@@ -115,14 +118,13 @@ class Chords
             when "show scale"
                 puts "#{scale[0]} #{scale[1]} #{scale[2]} #{scale[3]} #{scale[4]} #{scale[5]} #{scale[6]}"
             when "list diatonic chords"
-                puts "here you are"
                 puts diatonic_chords
             when "list extended chords"
-                puts "here you are"
                 puts extended_chords
             when "list secondary dominants"
-                puts "here you are"
                 puts secondary_dominants
+            when "show all"
+                show_all
             when "next chord options"
                 next_chord_options
             when "find this function"
@@ -143,16 +145,33 @@ class Chords
     private
 
     def find_key
+        system "clear"
         puts "what key are you in?"
-        key = gets.chomp.upcase
+        key = gets.chomp.capitalize
     end
 
     def build_scale(key)
         new_arr = []
-        build_from = NOTES.rotate(NOTES.index(key))
-        new_arr += [build_from[0]] + [build_from[2]] + [build_from[4]] + 
-            [build_from[5]] + [build_from[7]] + [build_from[9]] + 
-            [build_from[11]]
+        if !key.include?("b")
+            build_from = NOTES.rotate(NOTES.index(key[0]))
+            new_arr += [build_from[0]] + [build_from[2]] + [build_from[4]] + 
+                [build_from[5]] + [build_from[7]] + [build_from[9]] + 
+                [build_from[11]]
+                # debugger
+        end
+        if key.upcase == "F"
+            new_arr[3] = "Bb"
+        elsif key.include?("b")
+            build_from = NOTES.rotate(NOTES.index(key[0]) - 1)
+                new_arr += [build_from[0]] + [build_from[2]] + [build_from[4]] + 
+                [build_from[5]] + [build_from[7]] + [build_from[9]] + 
+                [build_from[11]]
+            new_arr.each_with_index do |note, i|
+                if note.include?("#")
+                    new_arr[i] = NOTES[NOTES.index(note) + 1] + "b"
+                end
+            end
+        end
         new_arr
     end
 
@@ -193,6 +212,17 @@ class Chords
             end
         end
         new_arr
+    end
+
+    def show_all
+        puts "scale: ".ljust(5) + "#{scale[0]} ".ljust(2) + "#{scale[1]} ".ljust(2) + "#{scale[2]} ".ljust(2) + "#{scale[3]} ".ljust(2) + "#{scale[4]} ".ljust(2) + "#{scale[5]} ".ljust(2) + "#{scale[6]} ".ljust(2)
+        puts "-------------------------------------------------------"
+        puts "diatonic chords: ".ljust(5) + "#{diatonic_chords[0]} ".ljust(2) + "#{diatonic_chords[1]} ".ljust(2) + "#{diatonic_chords[2]} ".ljust(2) + "#{diatonic_chords[3]} ".ljust(2) + "#{diatonic_chords[4]} ".ljust(2) + "#{diatonic_chords[5]} ".ljust(2) + "#{diatonic_chords[6]} ".ljust(2)
+        puts "-------------------------------------------------------"
+        puts "extended chords: ".ljust(5) + "#{extended_chords[0]} ".ljust(2) + "#{extended_chords[1]} ".ljust(2) + "#{extended_chords[2]} ".ljust(2) + "#{extended_chords[3]} ".ljust(2) + "#{extended_chords[4]} ".ljust(2) + "#{extended_chords[5]} ".ljust(2) + "#{extended_chords[6]} ".ljust(2)
+        puts "-------------------------------------------------------"
+        puts "secondary dominants: ".ljust(5) + "#{secondary_dominants[0]} ".ljust(2) + "#{secondary_dominants[1]} ".ljust(2) + "#{secondary_dominants[2]} ".ljust(2) + "#{secondary_dominants[3]} ".ljust(2) + "#{secondary_dominants[4]} ".ljust(2)
+        puts "-------------------------------------------------------"
     end
 
 end
