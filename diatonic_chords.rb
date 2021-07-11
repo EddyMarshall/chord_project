@@ -1,5 +1,3 @@
-
-require "byebug"
 class Chords
 
     NOTES = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
@@ -18,11 +16,21 @@ class Chords
     def make_progression
         p "what genre? (I only accept jazz, pop, and random)"
         genre = gets.chomp
+        tonic = [diatonic_chords[0]] + [diatonic_chords[2]] + [diatonic_chords[5]] + 
+        [extended_chords[0]] + [extended_chords[2]] + [extended_chords[5]]
+
+        subdominant = [diatonic_chords[1]] + [diatonic_chords[3]] + 
+                        [extended_chords[1]] + [extended_chords[3]]
+
+        dominant = [diatonic_chords[4]] + [diatonic_chords[6]] + 
+                    [extended_chords[4]] + [extended_chords[6]]
+        dominant << "#{diatonic_chords[4]}7"
+
         if genre == "jazz"
             options = secondary_dominants + extended_chords
-            p "#{extended_chords[0]}    #{options.sample}   #{extended_chords[1]}   #{extended_chords[4]}   #{extended_chords[0]}"
+            p "#{extended_chords[0]}    #{options.sample}   #{subdominant.sample}   #{dominant.sample}   #{extended_chords[0]}"
         elsif genre == "pop"
-            p "#{diatonic_chords[0]}    #{diatonic_chords.sample}   #{diatonic_chords[3]}   #{diatonic_chords[4]}   #{diatonic_chords[0]}"
+            p "#{diatonic_chords[0]}    #{diatonic_chords.sample}   #{subdominant[0..1].sample}   #{dominant[0..1].sample}   #{diatonic_chords[0]}"
         else
             options = secondary_dominants + extended_chords + diatonic_chords
             p "#{options.sample}    #{options.sample}   #{options.sample}   #{options.sample}   #{diatonic_chords[0]}"
@@ -153,11 +161,10 @@ class Chords
     def build_scale(key)
         new_arr = []
         if !key.include?("b")
-            build_from = NOTES.rotate(NOTES.index(key[0]))
+            build_from = NOTES.rotate(NOTES.index(key))
             new_arr += [build_from[0]] + [build_from[2]] + [build_from[4]] + 
                 [build_from[5]] + [build_from[7]] + [build_from[9]] + 
                 [build_from[11]]
-                # debugger
         end
         if key.upcase == "F"
             new_arr[3] = "Bb"
